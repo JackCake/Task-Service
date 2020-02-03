@@ -47,15 +47,17 @@ public class MySqlEventStoreImpl implements EventStore {
 	@Override
 	public synchronized List<DomainEvent> getByEventType(String eventType) {
 		sqlDatabaseHelper.connectToDatabase();
+		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		List<DomainEvent> events = new ArrayList<>();
 		try {
-			String query = String.format("Select * From %s Where %s = '%s' Order By %s",
-					EventTable.tableName,
-					EventTable.eventType,
-					eventType,
+			String sql = String.format("Select * From %s Where %s = ? Order By %s",
+					EventTable.tableName, 
+					EventTable.eventType, 
 					EventTable.eventId);
-			resultSet = sqlDatabaseHelper.getResultSet(query);
+			preparedStatement = sqlDatabaseHelper.getPreparedStatement(sql);
+			preparedStatement.setString(1, eventType);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				String eventBody = resultSet.getString(EventTable.eventBody);
 				
@@ -68,6 +70,7 @@ public class MySqlEventStoreImpl implements EventStore {
 			e.printStackTrace();
 		} finally {
 			sqlDatabaseHelper.closeResultSet(resultSet);
+			sqlDatabaseHelper.closePreparedStatement(preparedStatement);
 			sqlDatabaseHelper.releaseConnection();
 		}
 		return events;
@@ -76,13 +79,15 @@ public class MySqlEventStoreImpl implements EventStore {
 	@Override
 	public synchronized List<DomainEvent> getAllEvent() {
 		sqlDatabaseHelper.connectToDatabase();
+		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		List<DomainEvent> events = new ArrayList<>();
 		try {
-			String query = String.format("Select * From %s Order By %s",
+			String sql = String.format("Select * From %s Order By %s",
 					EventTable.tableName,
 					EventTable.eventId);
-			resultSet = sqlDatabaseHelper.getResultSet(query);
+			preparedStatement = sqlDatabaseHelper.getPreparedStatement(sql);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				String eventBody = resultSet.getString(EventTable.eventBody);
 				String eventType = resultSet.getString(EventTable.eventType);
@@ -96,6 +101,7 @@ public class MySqlEventStoreImpl implements EventStore {
 			e.printStackTrace();
 		} finally {
 			sqlDatabaseHelper.closeResultSet(resultSet);
+			sqlDatabaseHelper.closePreparedStatement(preparedStatement);
 			sqlDatabaseHelper.releaseConnection();
 		}
 		return events;

@@ -1,5 +1,9 @@
 package ntut.csie.taskService.gateways.repository.task;
 
+import java.util.Collection;
+
+import ntut.csie.taskService.gateways.repository.task.taskAttachFile.TaskAttachFileData;
+
 public class TaskData {
 	private String taskId;
 	private int orderId;
@@ -10,6 +14,7 @@ public class TaskData {
 	private int remains;
 	private String notes;
 	private String backlogItemId;
+	private Collection<TaskAttachFileData> taskAttachFileDatas;
 	
 	public String getTaskId() {
 		return taskId;
@@ -81,5 +86,13 @@ public class TaskData {
 	
 	public void setBacklogItemId(String backlogItemId) {
 		this.backlogItemId = backlogItemId;
+	}
+
+	public Collection<TaskAttachFileData> getTaskAttachFileDatas() {
+		return taskAttachFileDatas;
+	}
+
+	public void setTaskAttachFileDatas(Collection<TaskAttachFileData> taskAttachFileDatas) {
+		this.taskAttachFileDatas = taskAttachFileDatas;
 	}
 }

@@ -1,5 +1,9 @@
 package ntut.csie.taskService.model.task;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import ntut.csie.taskService.model.DomainEventPublisher;
 
 public class Task {
@@ -12,13 +16,17 @@ public class Task {
 	private int remains;
 	private String notes;
 	private String backlogItemId;
+	private List<TaskAttachFile> taskAttachFiles;
 	
-	public Task() {}
+	public Task() {
+		taskAttachFiles = new ArrayList<>();
+	}
 	
 	public Task(String taskId, String description, String backlogItemId) {
 		this.setTaskId(taskId);
 		this.setDescription(description);
 		this.setBacklogItemId(backlogItemId);
+		taskAttachFiles = new ArrayList<>();
 		DomainEventPublisher.getInstance().publish(new TaskAdded(taskId));
 	}
 	
@@ -74,7 +82,40 @@ public class Task {
 	
 	public void markAsRemoved() {
 		DomainEventPublisher.getInstance().publish(new TaskDeleted(
-				taskId, backlogItemId));
+				taskId, taskAttachFiles, backlogItemId));
+	}
+	
+	public void uploadTaskAttachFile(String name, String path) throws Exception {
+		TaskAttachFile taskAttachFile = TaskAttachFileBuilder.newInstance()
+				.name(name)
+				.path(path)
+				.taskId(taskId)
+				.build();
+		taskAttachFiles.add(taskAttachFile);
+	}
+	
+	public void addTaskAttachFile(String taskAttachFileId, String name, String path, Date createTime) {
+		TaskAttachFile taskAttachFile = new TaskAttachFile();
+		taskAttachFile.setTaskAttachFileId(taskAttachFileId);
+		taskAttachFile.setName(name);
+		taskAttachFile.setPath(path);
+		taskAttachFile.setTaskId(taskId);
+		taskAttachFile.setCreateTime(createTime);
+		taskAttachFiles.add(taskAttachFile);
+	}
+	
+	public void removeTaskAttachFile(String taskAttachFileId) throws Exception {
+		TaskAttachFile taskAttachFile = getTaskAttachFile(taskAttachFileId);
+		taskAttachFiles.remove(taskAttachFile);
+	}
+	
+	public TaskAttachFile getTaskAttachFile(String taskAttachFileId) throws Exception {
+		for(TaskAttachFile taskAttachFile : taskAttachFiles) {
+			if(taskAttachFile.getTaskAttachFileId().equals(taskAttachFileId)) {
+				return taskAttachFile;
+			}
+		}
+		throw new Exception("Sorry, the attach file of the task is not exist!");
 	}
 
 	public String getTaskId() {
@@ -147,5 +188,13 @@ public class Task {
 
 	public void setBacklogItemId(String backlogItemId) {
 		this.backlogItemId = backlogItemId;
+	}
+
+	public List<TaskAttachFile> getTaskAttachFiles() {
+		return taskAttachFiles;
+	}
+
+	public void setTaskAttachFiles(List<TaskAttachFile> taskAttachFiles) {
+		this.taskAttachFiles = taskAttachFiles;
 	}
 }

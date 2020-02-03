@@ -48,7 +48,7 @@ public class EditTaskRestfulAPI implements EditTaskOutput {
 		} catch (JSONException e) {
 			e.printStackTrace();
 			output.setEditSuccess(false);
-			output.setErrorMessage("Sorry, please try again!");
+			output.setErrorMessage("Sorry, there is the service problem when edit the task. Please contact to the system administrator!");
 			return output;
 		}
 		

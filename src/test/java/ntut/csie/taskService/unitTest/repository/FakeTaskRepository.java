@@ -34,13 +34,13 @@ public class FakeTaskRepository implements TaskRepository{
 
 	@Override
 	public Collection<Task> getTasksByBacklogItemId(String backlogItemId) {
-		List<Task> workItemList = new ArrayList<>();
+		List<Task> taskList = new ArrayList<>();
 		for(Task task : tasks.values()) {
 			if(task.getBacklogItemId().equals(backlogItemId)) {
-				workItemList.add(task);
+				taskList.add(task);
 			}
 		}
-		return workItemList;
+		return taskList;
 	}
 	
 	public void clearAll() {

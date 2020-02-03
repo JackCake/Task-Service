@@ -18,7 +18,7 @@ public class MoveTaskUseCaseImpl implements MoveTaskUseCase, MoveTaskInput{
 		Task task = taskRepository.getTaskById(input.getTaskId());
 		if(task == null) {
 			output.setMoveSuccess(false);
-			output.setErrorMessage("Sorry, the task is not exist.");
+			output.setErrorMessage("Sorry, the task is not exist!");
 			return;
 		}
 		task.changeStatus(input.getStatus());

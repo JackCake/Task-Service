@@ -27,6 +27,7 @@ public class SqlDatabaseHelper {
 		createTaskServiceDatabase();
 		ConnectionPool.getInstance().initialize(serverUrl, databaseName, account, password);
 		createTaskTable();
+		createTaskAttachFileTable();
 		createEventTable();
 	}
 	
@@ -60,7 +61,7 @@ public class SqlDatabaseHelper {
 		String sql = "Create Table If Not Exists " + TaskTable.tableName + " ("
 				+ TaskTable.taskId + " Varchar(50) Not Null, "
 				+ TaskTable.orderId + " Integer Not Null, "
-				+ TaskTable.description + " Varchar(256) Not Null, "
+				+ TaskTable.description + " Varchar(255) Not Null, "
 				+ TaskTable.handlerId + " Varchar(50), "
 				+ TaskTable.status + " Varchar(50) Not Null, "
 				+ TaskTable.estimate + " TinyInt(3) Unsigned Not Null Default '0', "
@@ -68,6 +69,28 @@ public class SqlDatabaseHelper {
 				+ TaskTable.notes + " Text, "
 				+ TaskTable.backlogItemId + " Varchar(50), "
 				+ "Primary Key (" + TaskTable.taskId + ") "
+				+ ")";
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStatement(statement);
+			releaseConnection();
+		}
+	}
+	
+	private void createTaskAttachFileTable() {
+		connectToDatabase();
+		Statement statement = null;
+		String sql = "Create Table If Not Exists " + TaskAttachFileTable.tableName + " ("
+				+ TaskAttachFileTable.taskAttachFileId + " Varchar(50) Not Null, "
+				+ TaskAttachFileTable.name + " Varchar(50) Not Null, "
+				+ TaskAttachFileTable.path + " Varchar(255) Not Null, "
+				+ TaskAttachFileTable.taskId + " Varchar(50) Not Null, "
+				+ TaskAttachFileTable.createTime + " Datetime Not Null Default Current_Timestamp, "
+				+ "Primary Key (" + TaskAttachFileTable.taskAttachFileId + ") "
 				+ ")";
 		try {
 			statement = connection.createStatement();
@@ -126,12 +149,6 @@ public class SqlDatabaseHelper {
 	public PreparedStatement getPreparedStatement(String sql) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		return preparedStatement;
-	}
-	
-	public ResultSet getResultSet(String query) throws SQLException {
-		Statement statement = connection.createStatement();
-		ResultSet resultSet = statement.executeQuery(query);
-		return resultSet;
 	}
 	
 	public void closeStatement(Statement statement) {

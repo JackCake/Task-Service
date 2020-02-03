@@ -42,7 +42,7 @@ public class MoveTaskRestfulAPI implements MoveTaskOutput {
 		} catch (JSONException e) {
 			e.printStackTrace();
 			output.setMoveSuccess(false);
-			output.setErrorMessage("Sorry, please try again!");
+			output.setErrorMessage("Sorry, there is the service problem when move the task. Please contact to the system administrator!");
 			return output;
 		}
 		

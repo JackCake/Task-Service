@@ -18,6 +18,14 @@ import ntut.csie.taskService.useCase.task.get.GetTasksByBacklogItemIdUseCase;
 import ntut.csie.taskService.useCase.task.get.GetTasksByBacklogItemIdUseCaseImpl;
 import ntut.csie.taskService.useCase.task.move.MoveTaskUseCase;
 import ntut.csie.taskService.useCase.task.move.MoveTaskUseCaseImpl;
+import ntut.csie.taskService.useCase.task.taskAttachFile.download.DownloadTaskAttachFileUseCase;
+import ntut.csie.taskService.useCase.task.taskAttachFile.download.DownloadTaskAttachFileUseCaseImpl;
+import ntut.csie.taskService.useCase.task.taskAttachFile.get.GetTaskAttachFilesByTaskIdUseCase;
+import ntut.csie.taskService.useCase.task.taskAttachFile.get.GetTaskAttachFilesByTaskIdUseCaseImpl;
+import ntut.csie.taskService.useCase.task.taskAttachFile.remove.RemoveTaskAttachFileUseCase;
+import ntut.csie.taskService.useCase.task.taskAttachFile.remove.RemoveTaskAttachFileUseCaseImpl;
+import ntut.csie.taskService.useCase.task.taskAttachFile.upload.UploadTaskAttachFileUseCase;
+import ntut.csie.taskService.useCase.task.taskAttachFile.upload.UploadTaskAttachFileUseCaseImpl;
 
 public class ApplicationContext {
 	private static ApplicationContext instance = null;
@@ -30,6 +38,10 @@ public class ApplicationContext {
 	private EditTaskUseCase editTaskUseCase;
 	private DeleteTaskUseCase deleteTaskUseCase;
 	private MoveTaskUseCase moveTaskUseCase;
+	private UploadTaskAttachFileUseCase uploadTaskAttachFileUseCase;
+	private GetTaskAttachFilesByTaskIdUseCase getTaskAttachFilesByTaskIdUseCase;
+	private DownloadTaskAttachFileUseCase downloadTaskAttachFileUseCase;
+	private RemoveTaskAttachFileUseCase removeTaskAttachFileUseCase;
 	private GetHistoriesByTaskIdUseCase getHistoriesByTaskIdUseCase;
 	private GetBurndownChartPointsBySprintDatesAndTaskIdsUseCase getBurndownChartPointsBySprintDatesAndTaskIdsUseCase;
 	
@@ -79,6 +91,26 @@ public class ApplicationContext {
 	public MoveTaskUseCase newMoveTaskUseCase() {
 		moveTaskUseCase = new MoveTaskUseCaseImpl(newTaskRepository());
 		return moveTaskUseCase;
+	}
+	
+	public UploadTaskAttachFileUseCase newUploadTaskAttachFileUseCase() {
+		uploadTaskAttachFileUseCase = new UploadTaskAttachFileUseCaseImpl(newTaskRepository());
+		return uploadTaskAttachFileUseCase;
+	}
+	
+	public GetTaskAttachFilesByTaskIdUseCase newGetTaskAttachFilesByTaskIdUseCase() {
+		getTaskAttachFilesByTaskIdUseCase = new GetTaskAttachFilesByTaskIdUseCaseImpl(newTaskRepository());
+		return getTaskAttachFilesByTaskIdUseCase;
+	}
+	
+	public DownloadTaskAttachFileUseCase newDownloadTaskAttachFileUseCase() {
+		downloadTaskAttachFileUseCase = new DownloadTaskAttachFileUseCaseImpl(newTaskRepository());
+		return downloadTaskAttachFileUseCase;
+	}
+	
+	public RemoveTaskAttachFileUseCase newRemoveTaskAttachFileUseCase() {
+		removeTaskAttachFileUseCase = new RemoveTaskAttachFileUseCaseImpl(newTaskRepository());
+		return removeTaskAttachFileUseCase;
 	}
 	
 	public GetHistoriesByTaskIdUseCase newGetHistoriesByTaskIdUseCase() {

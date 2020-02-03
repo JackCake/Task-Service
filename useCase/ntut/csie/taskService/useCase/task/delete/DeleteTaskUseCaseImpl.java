@@ -18,7 +18,7 @@ public class DeleteTaskUseCaseImpl implements DeleteTaskUseCase, DeleteTaskInput
 		Task task = taskRepository.getTaskById(taskId);
 		if(task == null) {
 			output.setDeleteSuccess(false);
-			output.setErrorMessage("Sorry, the task is not exist.");
+			output.setErrorMessage("Sorry, the task is not exist!");
 			return;
 		}
 		try {

@@ -40,17 +40,21 @@ public class TaskBuilder {
 	}
 	
 	public Task build() throws Exception {
-		if(description == null) {
-			throw new Exception("The description of the task should not be null.");
+		String exceptionMessage = "";
+		if(description == null || description.isEmpty()) {
+			exceptionMessage += "The description of the task should be required!\n";
 		}
-		if(backlogItemId == null) {
-			throw new Exception("The story of the task should not be null.");
+		if(backlogItemId == null || backlogItemId.isEmpty()) {
+			exceptionMessage += "The backlog item id of the task should be required!\n";
+		}
+		if(!exceptionMessage.isEmpty()) {
+			throw new Exception(exceptionMessage);
 		}
 		
 		taskId = UUID.randomUUID().toString();
 		Task task = new Task(taskId, description, backlogItemId);
 		task.setOrderId(orderId);
-		task.setStatus("To do");
+		task.setStatus(TaskStatus.toDo);
 		task.setEstimate(estimate);
 		task.setRemains(estimate);
 		task.setNotes(notes);

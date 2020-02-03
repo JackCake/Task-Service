@@ -19,10 +19,20 @@ public class EditTaskUseCaseImpl implements EditTaskUseCase, EditTaskInput{
 	@Override
 	public void execute(EditTaskInput input, EditTaskOutput output) {
 		String taskId = input.getTaskId();
+		String description = input.getDescription();
 		Task task = taskRepository.getTaskById(taskId);
 		if(task == null) {
 			output.setEditSuccess(false);
-			output.setErrorMessage("Sorry, the task is not exist.");
+			output.setErrorMessage("Sorry, the task is not exist!");
+			return;
+		}
+		String exceptionMessage = "";
+		if(description == null || description.isEmpty()) {
+			exceptionMessage += "The description of the task should be required!\n";
+		}
+		if(!exceptionMessage.isEmpty()) {
+			output.setEditSuccess(false);
+			output.setErrorMessage(exceptionMessage);
 			return;
 		}
 		

@@ -1,9 +1,12 @@
 package ntut.csie.taskService.useCase;
 
+import java.io.File;
+
 import ntut.csie.taskService.model.DomainEventPublisher;
 import ntut.csie.taskService.model.DomainEventSubscriber;
 import ntut.csie.taskService.model.task.Task;
 import ntut.csie.taskService.model.task.TaskAdded;
+import ntut.csie.taskService.model.task.TaskAttachFile;
 import ntut.csie.taskService.model.task.TaskDeleted;
 import ntut.csie.taskService.model.task.TaskDescriptionEdited;
 import ntut.csie.taskService.model.task.TaskEstimateChanged;
@@ -123,6 +126,13 @@ public class DomainEventListener {
 
 			@Override
 			public void handleEvent(TaskDeleted domainEvent) {
+				for(TaskAttachFile taskAttachFile: domainEvent.taskAttachFiles()) {
+					File attachFile = new File(taskAttachFile.getPath());
+					attachFile.delete();
+				}
+				String folderPath = "taskAttachFiles" + File.separator + domainEvent.taskId();
+				File folder = new File(folderPath);
+				folder.delete();
 				int newOrderId = 0;
 				for(Task task : taskRepository.getTasksByBacklogItemId(domainEvent.backlogItemId())) {
 					task.setOrderId(++newOrderId);
